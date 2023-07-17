@@ -13,13 +13,15 @@ public class Car {
     private Texture texture;
     private Vector2 position;
     private float speed;
+    private int lane;
     Random random = new Random();
 
 
-    public Car(Texture texture, float x, float y, float speed) {
+    public Car(Texture texture, float x, float y, float speed,int lane) {
         this.texture = texture;
         this.position = new Vector2(x, y);
         this.speed = speed;
+        this.lane = lane;
     }
 
     public void update(float deltaTime) {
@@ -38,8 +40,17 @@ public class Car {
         return position;
     }
 
+    public void setPosition(float x, float y) {
+        position.set(x, y);
+    }
+
+
     public Texture getTexture() {
         return texture;
+    }
+
+    public int getLane() {
+        return lane;
     }
 
 }
