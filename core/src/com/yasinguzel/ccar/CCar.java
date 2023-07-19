@@ -185,15 +185,20 @@ public class CCar extends ApplicationAdapter {
 	Texture highway;
 	Texture playercar;
 
+
 	private CarManager carManager;
 
 	float screenWidth;
 	float screenHeight;
 	float deltaTime;
-	int score;
+	float score;
 	int gameState;
 
 	OrthographicCamera camera;
+	private PlayerCarControl playerCarControl;
+
+
+
 
 	@Override
 	public void create() {
@@ -201,6 +206,7 @@ public class CCar extends ApplicationAdapter {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera.update();
+		gameState = 0;
 		highway = new Texture("highway.png");
 		playercar = new Texture("playercar.png");
 		screenWidth = Gdx.graphics.getWidth();
@@ -208,6 +214,15 @@ public class CCar extends ApplicationAdapter {
 		deltaTime = Gdx.graphics.getDeltaTime();
 
 		carManager = new CarManager(screenWidth, screenHeight);
+		playerCarControl = new PlayerCarControl(screenWidth, screenHeight);
+
+	}
+
+	private void resetGame() {
+		gameState = 0;
+		score = 0;
+		playerCarControl.setPlayerPosition(screenWidth / 2.3f, screenHeight / 17f);
+		carManager.resetCars();
 	}
 
 	@Override
@@ -216,17 +231,40 @@ public class CCar extends ApplicationAdapter {
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		batch.draw(highway, 0, 0);
-		batch.draw(playercar, screenWidth / 2.3f, screenHeight / 17);
+
+
+		if(gameState == 0){
+			batch.draw(playercar, screenWidth / 2.3f, screenHeight / 17);
+		}
 
 		if (Gdx.input.justTouched()) {
 			gameState = 1;
 		}
 		if (gameState == 1) {
-			batch.draw(playercar, screenWidth / 2.3f, screenHeight / 17);
+			//batch.draw(playercar, screenWidth / 2.3f, screenHeight / 17);carManager.update(deltaTime);
+			//carManager.update(deltaTime);
+			//carManager.render(batch);
+			// Şerit değiştirme işlemi
+			//playerCarControl.render(batch); // Arabayı çiz
+			//playerCarControl.changeLine();
 			carManager.update(deltaTime);
+			for (Car car : carManager.getCars()) {
+				if (playerCarControl.checkCollision(car)) {
+					// Oyuncu arabası ve bir rakip araba arasında çarpışma tespit edildi
+					gameState = 2; // Oyun durumu "Oyun Bitti" olarak güncelle
+					resetGame();
+					break;
+				}
+
+			}
+			carManager.render(batch);
+			playerCarControl.render(batch);
+			playerCarControl.changeLine();
 		}
 
-		carManager.render(batch);
+
+
+
 
 		batch.end();
 	}

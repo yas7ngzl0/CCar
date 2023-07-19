@@ -114,4 +114,17 @@ public class CarManager {
             texture.dispose();
         }
     }
+
+    public ArrayList<Car> getCars() {
+        return cars;
+    }
+
+    public void resetCars() {
+        cars.clear();
+        for (int i = 0; i < lanes.length; i++) {
+            lanes[i] = false;
+        }
+        speedIncrease = 5f;
+    }
+
 }
