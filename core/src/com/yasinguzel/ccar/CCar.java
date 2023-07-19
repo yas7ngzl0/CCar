@@ -175,15 +175,27 @@ public class CCar extends ApplicationAdapter {
 package com.yasinguzel.ccar;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 public class CCar extends ApplicationAdapter {
 	SpriteBatch batch;
 	Texture highway;
 	Texture playercar;
+	BitmapFont font;
+	BitmapFont gameOverFont;
+
+	BitmapFont scoreFont;
+	BitmapFont highScoreFont;
+	FreeTypeFontGenerator scoreGen;
+	FreeTypeFontGenerator overGen;
+	FreeTypeFontGenerator highGen;
 
 
 	private CarManager carManager;
@@ -191,7 +203,9 @@ public class CCar extends ApplicationAdapter {
 	float screenWidth;
 	float screenHeight;
 	float deltaTime;
-	float score;
+	int score;
+	int highScore = 0;
+	float increaseScore;
 	int gameState;
 
 	OrthographicCamera camera;
@@ -215,12 +229,44 @@ public class CCar extends ApplicationAdapter {
 
 		carManager = new CarManager(screenWidth, screenHeight);
 		playerCarControl = new PlayerCarControl(screenWidth, screenHeight);
+		score =0;
+		increaseScore = 0;
+		font = new BitmapFont();
+		font.setColor(Color.GOLD);
+		font.getData().setScale(4);
+
+		overGen = new FreeTypeFontGenerator(Gdx.files.internal("overgen.ttf"));
+		FreeTypeFontGenerator.FreeTypeFontParameter params = new FreeTypeFontGenerator.FreeTypeFontParameter();
+		params.color = Color.MAGENTA;
+		params.size = 100;
+		params.characters = "GAMEOVR";
+		gameOverFont = overGen.generateFont(params);
+
+		scoreGen = new FreeTypeFontGenerator(Gdx.files.internal("scoregen.otf"));
+		FreeTypeFontGenerator.FreeTypeFontParameter params2 = new FreeTypeFontGenerator.FreeTypeFontParameter();
+		params2.color = Color.WHITE;
+		params2.size = 70;
+		params2.characters = "YOURSCE : 0123456789";
+		scoreFont = scoreGen.generateFont(params2);
+
+		highGen = new FreeTypeFontGenerator(Gdx.files.internal("scoregen.otf"));
+		FreeTypeFontGenerator.FreeTypeFontParameter params3 = new FreeTypeFontGenerator.FreeTypeFontParameter();
+		params3.color = Color.GOLD;
+		params3.size = 65;
+		params3.characters = "YOURSCEHIG : 0123456789";
+		highScoreFont = highGen.generateFont(params3);
+
+
+
+		Preferences preferences = Gdx.app.getPreferences("CCarPreferences");
+		highScore = preferences.getInteger("highScore",0);
 
 	}
 
 	private void resetGame() {
-		gameState = 0;
+		gameState = 1;
 		score = 0;
+		increaseScore = 0f;
 		playerCarControl.setPlayerPosition(screenWidth / 2.3f, screenHeight / 17f);
 		carManager.resetCars();
 	}
@@ -252,9 +298,17 @@ public class CCar extends ApplicationAdapter {
 				if (playerCarControl.checkCollision(car)) {
 					// Oyuncu arabası ve bir rakip araba arasında çarpışma tespit edildi
 					gameState = 2; // Oyun durumu "Oyun Bitti" olarak güncelle
-					resetGame();
+					if(score > highScore){
+						highScore = score;
+						Preferences preferences = Gdx.app.getPreferences("CCarPreferences");
+						preferences.putInteger("highScore", highScore);
+						preferences.flush();
+					}
+
 					break;
 				}
+             increaseScore = increaseScore + 0.015f;
+				score = (int) (score + increaseScore) /2;
 
 			}
 			carManager.render(batch);
@@ -262,10 +316,19 @@ public class CCar extends ApplicationAdapter {
 			playerCarControl.changeLine();
 		}
 
+		if(gameState == 2){
+			gameOverFont.draw(batch,"GAME OVER",260,1500);
+			scoreFont.draw(batch,"YOUR SCORE : 0",260,1000);
+			highScoreFont.draw(batch,"YOUR HIGH SCORE : 9999",150,500);
+			if(Gdx.input.justTouched()){
+				resetGame();
+			}
+
+		}
 
 
 
-
+        font.draw(batch,String.valueOf(score),100,2000);
 		batch.end();
 	}
 
@@ -281,6 +344,12 @@ public class CCar extends ApplicationAdapter {
 		highway.dispose();
 		playercar.dispose();
 		carManager.dispose();
+		overGen.dispose();
+		gameOverFont.dispose();
+		scoreFont.dispose();
+		scoreGen.dispose();
+		highScoreFont.dispose();
+		highGen.dispose();
 	}
 }
 
