@@ -19,7 +19,7 @@ android {
     }
     defaultConfig {
         applicationId "com.yasinguzel.ccar"
-        minSdkVersion 14
+        minSdkVersion 19
         targetSdkVersion 33
         versionCode 1
         versionName "1.0"
@@ -29,6 +29,10 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    buildFeatures {
+        renderScript true
+        aidl true
     }
 }
 

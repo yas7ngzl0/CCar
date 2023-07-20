@@ -215,7 +215,9 @@ public class CCar extends ApplicationAdapter {
 
 
 
-
+//uygulama kimliği : ca-app-pub-9582732495383626~8235623486
+	//reklam kimligi : ca-app-pub-9582732495383626/8044051790
+	//deneme için reklam kimliği : ca-app-pub-3940256099942544/6300978111
 
 	@Override
 	public void create() {
