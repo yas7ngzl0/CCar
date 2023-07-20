@@ -73,7 +73,7 @@ public class CarManager {
             float y = screenHeight;
             float x = getLanePosition(emptyLane);
             speedIncrease = speedIncrease + 1f;
-            float speed = MathUtils.random(100 + speedIncrease, 150 + speedIncrease);
+            float speed = MathUtils.random(100 + speedIncrease, 180 + speedIncrease);
             Car car = new Car(carTexture, x, y, speed, emptyLane);
             cars.add(car);
             lanes[emptyLane] = true;

@@ -183,6 +183,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.Timer;
 
 public class CCar extends ApplicationAdapter {
 	SpriteBatch batch;
@@ -210,6 +211,8 @@ public class CCar extends ApplicationAdapter {
 
 	OrthographicCamera camera;
 	private PlayerCarControl playerCarControl;
+	private boolean canReset = true;
+
 
 
 
@@ -264,11 +267,15 @@ public class CCar extends ApplicationAdapter {
 	}
 
 	private void resetGame() {
-		gameState = 1;
-		score = 0;
-		increaseScore = 0f;
-		playerCarControl.setPlayerPosition(screenWidth / 2.3f, screenHeight / 17f);
-		carManager.resetCars();
+
+			gameState = 1;
+			score = 0;
+			increaseScore = 0f;
+			playerCarControl.setPlayerPosition(screenWidth / 2.3f, screenHeight / 17f);
+			carManager.resetCars();
+
+
+
 	}
 
 	@Override
@@ -318,11 +325,29 @@ public class CCar extends ApplicationAdapter {
 
 		if(gameState == 2){
 			gameOverFont.draw(batch,"GAME OVER",260,1500);
-			scoreFont.draw(batch,"YOUR SCORE : 0",260,1000);
-			highScoreFont.draw(batch,"YOUR HIGH SCORE : 9999",150,500);
-			if(Gdx.input.justTouched()){
+			scoreFont.draw(batch,"YOUR SCORE : " +score,150,1000);
+			highScoreFont.draw(batch,"HIGH SCORE : " + highScore,150,500);
+			/*if (Gdx.input.justTouched()) {
 				resetGame();
-			}
+
+			}*/
+
+				if (Gdx.input.justTouched() && canReset) {
+					// Oyunu sıfırlama işlemleri burada yapılır.
+					//resetGame();
+					canReset = false; // Tekrar tıklamayı engellemek için flag'i false yap.
+					// 2 saniye sonra tekrar tıklamayı kabul etmek için bekleme işlemi başlat.
+					Timer.schedule(new Timer.Task() {
+						@Override
+						public void run() {
+							canReset = true;
+							resetGame();
+						}
+					}, 0.15f); // 2 saniye (2f) sonra canReset flag'ini tekrar true yaparak tıklamayı kabul eder hale gelir.
+				}
+
+
+
 
 		}
 
