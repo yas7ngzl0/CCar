@@ -215,6 +215,7 @@ public class CCar extends ApplicationAdapter {
 
 
 
+
 //uygulama kimliği : ca-app-pub-9582732495383626~8235623486
 	//reklam kimligi : ca-app-pub-9582732495383626/8044051790
 	//deneme için reklam kimliği : ca-app-pub-3940256099942544/6300978111
@@ -270,13 +271,12 @@ public class CCar extends ApplicationAdapter {
 
 	private void resetGame() {
 
-			gameState = 1;
+
+			gameState = 0;
 			score = 0;
 			increaseScore = 0f;
 			playerCarControl.setPlayerPosition(screenWidth / 2.3f, screenHeight / 17f);
 			carManager.resetCars();
-
-
 
 	}
 
@@ -306,14 +306,14 @@ public class CCar extends ApplicationAdapter {
 			for (Car car : carManager.getCars()) {
 				if (playerCarControl.checkCollision(car)) {
 					// Oyuncu arabası ve bir rakip araba arasında çarpışma tespit edildi
-					gameState = 2; // Oyun durumu "Oyun Bitti" olarak güncelle
+					 // Oyun durumu "Oyun Bitti" olarak güncelle
 					if(score > highScore){
 						highScore = score;
 						Preferences preferences = Gdx.app.getPreferences("CCarPreferences");
 						preferences.putInteger("highScore", highScore);
 						preferences.flush();
 					}
-
+					gameState = 2;
 					break;
 				}
              increaseScore = increaseScore + 0.015f;
@@ -355,7 +355,7 @@ public class CCar extends ApplicationAdapter {
 
 
 
-        font.draw(batch,String.valueOf(score),100,2000);
+        font.draw(batch,String.valueOf(score),100,1700);
 		batch.end();
 	}
 
