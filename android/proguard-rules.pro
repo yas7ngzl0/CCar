@@ -24,7 +24,15 @@
 -dontwarn com.badlogic.gdx.backends.android.AndroidFragmentApplication
 
 # Required if using Gdx-Controllers extension
--keep class com.badlogic.gdx.controllers.android.AndroidControllers
+-keep class com.yasinguzel.ccar.AndroidLauncher
+-keep class com.yasinguzel.ccar.Car
+-keep class com.yasinguzel.ccar.CarManager
+-keep class com.yasinguzel.ccar.CCar
+-keep class com.yasinguzel.ccar.PlayerCarControl
+-keep class com.google.android.gms.** { *; }
+-keep class com.google.android.gms.common.api.** { *; }
+
+
 
 # Required if using Box2D extension
 -keepclassmembers class com.badlogic.gdx.physics.box2d.World {
@@ -36,3 +44,5 @@
    boolean reportFixture(long);
    float   reportRayFixture(long, float, float, float, float, float);
 }
+
+

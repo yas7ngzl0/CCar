@@ -46,6 +46,7 @@ public class CCar extends ApplicationAdapter {
 //uygulama kimliği : ca-app-pub-9582732495383626~8235623486
 	//reklam kimligi : ca-app-pub-9582732495383626/8044051790
 	//deneme için reklam kimliği : ca-app-pub-3940256099942544/6300978111
+	//-keep class com.badlogic.gdx.controllers.android.AndroidControllers
 
 	@Override
 	public void create() {
@@ -95,6 +96,7 @@ public class CCar extends ApplicationAdapter {
 		highScore = preferences.getInteger("highScore",0);
 
 	}
+
 
 	private void resetGame() {
 
@@ -195,6 +197,7 @@ public class CCar extends ApplicationAdapter {
 		scoreGen.dispose();
 		highScoreFont.dispose();
 		highGen.dispose();
+		font.dispose();
 	}
 }
 
